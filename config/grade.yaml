@@ -35,8 +35,8 @@ reporting:
   post: "https://cs125-reporting.cs.illinois.edu/progress"
 notes:
   "Note that the maximum local grade is 90/100. 10 points will be provided
-  during official grading if you have committed code that earns at least 50
-  points by Monday 2/19/2018 at 5PM."
+  during official grading if you have committed code that earns at least 40
+  points by Friday 2/16/2018 at 5PM."
 checkstyle:
   name: "checkstyle Tests"
   missing:

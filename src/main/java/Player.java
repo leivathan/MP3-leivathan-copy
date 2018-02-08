@@ -76,6 +76,26 @@ public class Player {
         this.id = other.id;
     }
 
+    /**
+     * Create a new player from a full set of fields.
+     * <p>
+     * This is entirely for deserialization by the web frontend. Unlike the other constructors, it
+     * does not increment the player count, since the assumption is that you are recovering an
+     * existing player.
+     *
+     * @param setName the name for the new player
+     * @param setScore the score for the new player
+     * @param setID the ID for the new player
+     */
+    @JsonCreator
+    public Player(@JsonProperty("name") final String setName,
+            @JsonProperty("score") final int setScore,
+            @JsonProperty("id") final int setID) {
+        this.name = setName;
+        this.score = setScore;
+        this.id = setID;
+    }
+
     /*
      * The following methods were auto-generated. We use the id field for equals and hash,
      * implementing entity semantics.

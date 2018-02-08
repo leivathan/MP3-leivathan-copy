@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * You do not need to modify this class (except to fix one checkstyle error). But you are encouraged
  * to study it since it does some of the things that you need to do to complete ConnectN.
  *
- * @see <a href="https://cs125.cs.illinois.edu/MP/5/">MP5 Documentation</a>
+ * @see <a href="https://cs125.cs.illinois.edu/MP/3/">MP3 Documentation</a>
  */
 public class Player {
     /** Class variable that we used to generate a unique ID for each newly created player. */

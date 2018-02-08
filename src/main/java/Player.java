@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Player {
     /** Class variable that we used to generate a unique ID for each newly created player. */
     private static int globalID = 0;

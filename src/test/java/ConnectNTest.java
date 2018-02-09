@@ -87,6 +87,8 @@ public class ConnectNTest {
         final String widthIsPublic = "Board width should not be public";
 
         ConnectN board = new ConnectN();
+        Assert.assertEquals(ConnectN.MAX_WIDTH, 16, "Read the spec, MAX_WIDTH is wrong");
+
 
         /*
          * Test valid widths.
@@ -95,6 +97,7 @@ public class ConnectNTest {
         Assert.assertEquals(board.getWidth(), 7, notSetCorrectly);
         Assert.assertTrue(board.setWidth(13), setBoardWidth);
         Assert.assertEquals(board.getWidth(), 13, notSetCorrectly);
+
 
         /*
          * Test invalid widths.
@@ -108,6 +111,7 @@ public class ConnectNTest {
         Assert.assertEquals(board.getWidth(), 13, invalidReset);
         Assert.assertFalse(board.setWidth(2001), invalidBoardWidth);
         Assert.assertEquals(board.getWidth(), 13, invalidReset);
+
 
         /*
          * Make sure width still works.
@@ -155,6 +159,7 @@ public class ConnectNTest {
         final String heightIsPublic = "Board height should not be public";
 
         ConnectN board = new ConnectN();
+        Assert.assertEquals(ConnectN.MAX_HEIGHT, 16, "Read the spec, MAX_HEIGHT is wrong");
 
         /*
          * Test valid heights.
@@ -225,6 +230,8 @@ public class ConnectNTest {
         final String nIsPublic = "Board N value should not be public";
 
         ConnectN board = new ConnectN();
+        Assert.assertEquals(ConnectN.MIN_N, 4, "Read the spec, MIN_N is wrong");
+
 
         /*
          * Test setting N before width and height.
@@ -612,6 +619,15 @@ public class ConnectNTest {
         gameBoard[0][0] = null;
         realBoard = game.getBoard();
         Assert.assertEquals(realBoard[0][0], player, gameBoardCopy);
+
+
+
+
+        // EXTRA TEST CASES HERE
+
+        Assert.assertFalse(game.setBoardAt(player, -1, 0), "setX cannot be < 0");
+        Assert.assertFalse(game.setBoardAt(player, 0, -1), "setY cannot be < 0");
+        Assert.assertFalse(game.setBoardAt(player, -1), "setX cannot be < 0");
     }
 
     /**

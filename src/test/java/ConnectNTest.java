@@ -621,10 +621,6 @@ public class ConnectNTest {
         Assert.assertEquals(realBoard[0][0], player, gameBoardCopy);
 
 
-
-
-        // EXTRA TEST CASES HERE
-
         Assert.assertFalse(game.setBoardAt(player, -1, 0), "setX cannot be < 0");
         Assert.assertFalse(game.setBoardAt(player, 0, -1), "setY cannot be < 0");
         Assert.assertFalse(game.setBoardAt(player, -1), "setX cannot be < 0");

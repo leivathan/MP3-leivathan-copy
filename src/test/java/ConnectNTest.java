@@ -102,7 +102,6 @@ public class ConnectNTest {
         /*
          * Test invalid widths.
          */
-
         Assert.assertFalse(board.setWidth(0), invalidBoardWidth);
         Assert.assertEquals(board.getWidth(), 13, invalidReset);
         Assert.assertFalse(board.setWidth(-9), invalidBoardWidth);
@@ -158,6 +157,9 @@ public class ConnectNTest {
         final String heightIsStatic = "Board height should not be static";
         final String heightIsPublic = "Board height should not be public";
 
+        /*
+         * Test MAX_HEIGHT.
+         */
         ConnectN board = new ConnectN();
         Assert.assertEquals(ConnectN.MAX_HEIGHT, 16, "Read the spec, MAX_HEIGHT is wrong");
 
@@ -229,6 +231,9 @@ public class ConnectNTest {
         final String nIsStatic = "Board N value should not be static";
         final String nIsPublic = "Board N value should not be public";
 
+        /*
+         * Test MAX_WIDTH.
+         */
         ConnectN board = new ConnectN();
         Assert.assertEquals(ConnectN.MIN_N, 4, "Read the spec, MIN_N is wrong");
 
@@ -620,7 +625,9 @@ public class ConnectNTest {
         realBoard = game.getBoard();
         Assert.assertEquals(realBoard[0][0], player, gameBoardCopy);
 
-
+        /*
+         * Test bad moves.
+         */
         Assert.assertFalse(game.setBoardAt(player, -1, 0), "setX cannot be < 0");
         Assert.assertFalse(game.setBoardAt(player, 0, -1), "setY cannot be < 0");
         Assert.assertFalse(game.setBoardAt(player, -1), "setX cannot be < 0");

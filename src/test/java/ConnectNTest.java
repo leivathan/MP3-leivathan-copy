@@ -67,7 +67,7 @@ public class ConnectNTest {
                 foundBoardTitle = publicTitle.equals("Another Title");
                 publicTitle = (String) field.get(anotherBoard);
                 foundAnotherBoardTitle = publicTitle.equals("Second Board");
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         Assert.assertTrue(foundBoardTitle, "Board title is not public");
@@ -140,7 +140,7 @@ public class ConnectNTest {
                 Assert.assertNotEquals(publicWidth, 11, widthIsPublic);
                 publicWidth = field.getInt(anotherBoard);
                 Assert.assertNotEquals(publicWidth, 9, widthIsPublic);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -211,7 +211,7 @@ public class ConnectNTest {
                 Assert.assertNotEquals(publicHeight, 10, heightIsPublic);
                 publicHeight = field.getInt(anotherBoard);
                 Assert.assertNotEquals(publicHeight, 8, heightIsPublic);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -339,7 +339,7 @@ public class ConnectNTest {
                 Assert.assertNotEquals(publicWidth, 5, nIsPublic);
                 publicWidth = field.getInt(anotherBoard);
                 Assert.assertNotEquals(publicWidth, 8, nIsPublic);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -897,7 +897,7 @@ public class ConnectNTest {
             try {
                 int publicCount = field.getInt(ConnectN.class);
                 Assert.assertNotEquals(publicCount, 13, "Game count should not be public");
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }

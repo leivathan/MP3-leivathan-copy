@@ -82,17 +82,17 @@ public class ConnectN {
      * @param setN The N value for the new ConnectN board.
      */
     public ConnectN(final int setWidth, final int setHeight, final int setN) {
-        boardWidth = setWidth;
-        boardHeight = setHeight;
-        nValue = setN;
-        if (boardWidth > MAX_WIDTH || boardWidth < MIN_WIDTH) {
-            this.boardWidth = 0;
-        }
-        if (boardHeight > MAX_HEIGHT || boardHeight < MIN_HEIGHT) {
-            this.boardHeight = 0;
-        }
-        if (nValue < MIN_N || boardHeight == 0 || boardWidth == 0) {
-            this.nValue = 0;
+        this(setWidth, setHeight);
+//        if (setWidth > MAX_WIDTH || setWidth < MIN_WIDTH) {
+//            this.boardWidth = setWidth;
+//        }
+//        if (setHeight <= MAX_HEIGHT || setHeight >= MIN_HEIGHT) {
+//            this.boardHeight = setHeight;
+//        }
+        if (setN < MIN_N || setN > Math.max(boardHeight, boardWidth)) {
+            nValue = 0;
+        } else {
+            nValue = setN;
         }
     }
     /**
@@ -155,7 +155,7 @@ public class ConnectN {
                 nValue = 0;
             }
             return true;
-        } else{
+        } else {
             return false;
         }
     }
@@ -209,7 +209,8 @@ public class ConnectN {
      *
      * @param getX the X coordinate to get the player at
      * @param getY the Y coordinate to get the player at
-     * @return the player whose tile is at that position, or null or error if nobody has played at that position
+     * @return the player whose tile is at that position,
+     * or null or error if nobody has played at that position
      */
     public Player getBoardAt(final int getX, final int getY) {
         return null;
@@ -246,7 +247,8 @@ public class ConnectN {
      * @param n the n value of the new ConnectN instance to create
      * @return an array of new ConnectN instances, or null if the parameters are invalid
      */
-    public static ConnectN[] createMany(final int number, final int width, final int height, final int n) {
+    public static ConnectN[] createMany(final int number, final int width,
+                                        final int height, final int n) {
         return null;
     }
     /**
@@ -268,26 +270,18 @@ public class ConnectN {
     }
     /**
      *
-     * @return
+     * @return an integer
      */
     public final int hashCode() {
-
+        return 0;
     }
     /**
      *
-     * @param obj
-     * @return
+     * @param obj what am I doing
+     * @return true or false
      */
-    public boolean equals(Object obj) {
-
+    public boolean equals(final Object obj) {
+        return true;
     }
-    /**
-     *
-     * @param firstBoard
-     * @param secondBoard
-     * @return
-     */
-    public static boolean compareBoards(final ConnectN firstBoard, final ConnectN secondBoard) {
 
-    }
 }

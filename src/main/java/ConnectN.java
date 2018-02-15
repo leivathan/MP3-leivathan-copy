@@ -172,7 +172,7 @@ public class ConnectN {
      * @return true, if successful
      */
     public boolean setN(final int newN) {
-        if (newN >= MIN_N && newN < Math.max(boardHeight, boardWidth)) {
+        if (newN >= MIN_N && newN < Math.min(boardHeight, boardWidth)) {
             nValue = newN;
             return true;
         } else {

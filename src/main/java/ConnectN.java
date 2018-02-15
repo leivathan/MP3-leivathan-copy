@@ -91,7 +91,8 @@ public class ConnectN {
 //        if (setHeight <= MAX_HEIGHT || setHeight >= MIN_HEIGHT) {
 //            this.boardHeight = setHeight;
 //        }
-        if (setN < MIN_N || setN >= Math.max(boardHeight, boardWidth) || this.boardWidth == 0 || this.boardHeight == 0) {
+        if (setN < MIN_N || setN >= Math.max(boardHeight, boardWidth)
+                || this.boardWidth == 0 || this.boardHeight == 0) {
             nValue = 0;
         } else {
             nValue = setN;

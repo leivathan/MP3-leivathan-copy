@@ -23,7 +23,7 @@ public class ConnectN {
     /**
      * Minimum board N value is 4.
      */
-    public static final int MIN_N = 6;
+    public static final int MIN_N = 4;
     /**
      * Public game title. Could be used by toString().
      */
@@ -52,12 +52,14 @@ public class ConnectN {
      * @param setHeight The height for the new ConnectN board.
      */
     ConnectN(final int setWidth, final int setHeight) {
-        boardWidth = setWidth;
-        boardHeight = setHeight;
-        if (boardWidth > MAX_WIDTH || boardWidth < MIN_WIDTH) {
+        if (setWidth <= MAX_WIDTH && setWidth >= MIN_WIDTH) {
+            this.boardWidth = setWidth;
+        } else {
             this.boardWidth = 0;
         }
-        if (boardHeight > MAX_HEIGHT || boardHeight < MIN_HEIGHT) {
+        if (setHeight <= MAX_HEIGHT && setHeight >= MIN_HEIGHT) {
+            this.boardHeight = setHeight;
+        } else {
             this.boardHeight = 0;
         }
     }
@@ -89,7 +91,7 @@ public class ConnectN {
 //        if (setHeight <= MAX_HEIGHT || setHeight >= MIN_HEIGHT) {
 //            this.boardHeight = setHeight;
 //        }
-        if (setN < MIN_N || setN > Math.max(boardHeight, boardWidth)) {
+        if (setN < MIN_N || setN >= Math.max(boardHeight, boardWidth) || this.boardWidth == 0 || this.boardHeight == 0) {
             nValue = 0;
         } else {
             nValue = setN;
@@ -127,7 +129,7 @@ public class ConnectN {
     public boolean setWidth(final int setWidth) {
         if (setWidth <= MAX_WIDTH && setWidth >= MIN_WIDTH) {
             this.boardWidth = setWidth;
-            if (nValue < MIN_N || nValue > Math.max(boardHeight, boardWidth)) {
+            if (nValue < MIN_N || nValue >= Math.max(boardHeight, boardWidth)) {
                 nValue = 0;
             }
             return true;
@@ -151,7 +153,7 @@ public class ConnectN {
     public boolean setHeight(final int setHeight) {
         if (setHeight <= MAX_HEIGHT && setHeight >= MIN_HEIGHT) {
             this.boardHeight = setHeight;
-            if (nValue < MIN_N || nValue > Math.max(boardHeight, boardWidth)) {
+            if (nValue < MIN_N || nValue >= Math.max(boardHeight, boardWidth)) {
                 nValue = 0;
             }
             return true;
@@ -172,7 +174,8 @@ public class ConnectN {
      * @return true, if successful
      */
     public boolean setN(final int newN) {
-        if (newN >= MIN_N && newN < Math.min(boardHeight, boardWidth)) {
+        if (newN >= MIN_N && newN < Math.max(boardHeight, boardWidth)
+                && boardHeight != 0 && boardWidth != 0) {
             nValue = newN;
             return true;
         } else {

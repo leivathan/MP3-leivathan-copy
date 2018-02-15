@@ -13,7 +13,7 @@ public class Player {
     /** Class variable that we used to generate a unique ID for each newly created player. */
     private static int globalID = 0;
     /**
-     * The player's name
+     * The player's name.
      */
     private String name;
 

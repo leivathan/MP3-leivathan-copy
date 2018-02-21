@@ -259,7 +259,7 @@ public class ConnectN {
     public static ConnectN create(final int width, final int height, final int n) {
         ConnectN dad;
         if (width > MAX_WIDTH || width < MIN_WIDTH && height > MAX_HEIGHT
-                || height< MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
+                || height < MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
             return null;
         } else {
             dad = new ConnectN(width, height, n);
@@ -278,7 +278,7 @@ public class ConnectN {
                                         final int height, final int n) {
         ConnectN[] arrayArmada = new ConnectN[number];
         if (width > MAX_WIDTH || width < MIN_WIDTH && height > MAX_HEIGHT
-                || height< MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
+                || height < MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
             return null;
         } else {
             for (int i = 0; i < number; i++) {

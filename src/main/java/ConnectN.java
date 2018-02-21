@@ -29,22 +29,32 @@ public class ConnectN {
      */
     public String title = "title";
     /**
-     *
+     * Height of the board.
      */
     private int boardHeight = 0;
     /**
-     *
+     * Width of the board.
      */
     private int boardWidth = 0;
     /**
-     *
+     * Number of consecutive tiles that need to be placed in order to win the game.
      */
     private int nValue = 0;
+    /**
+     * Number of  games played.
+     */
+    private static int gameCount = 0;
+    /**
+     * The id of the game.
+     */
+    private int id = 0;
 
     /**
      * Create a new ConnectN board with uninitialized height, width, and N value.
      */
     ConnectN() {
+        this.id = gameCount;
+        gameCount++;
     }
     /**
      * Create a new ConnectN board with given height and width and uninitialized N value.
@@ -62,6 +72,8 @@ public class ConnectN {
         } else {
             this.boardHeight = 0;
         }
+        this.id = gameCount;
+        gameCount++;
     }
     /**
      * Creates a new connectN board with a given height, width, and N value.
@@ -85,18 +97,14 @@ public class ConnectN {
      */
     public ConnectN(final int setWidth, final int setHeight, final int setN) {
         this(setWidth, setHeight);
-//        if (setWidth > MAX_WIDTH || setWidth < MIN_WIDTH) {
-//            this.boardWidth = setWidth;
-//        }
-//        if (setHeight <= MAX_HEIGHT || setHeight >= MIN_HEIGHT) {
-//            this.boardHeight = setHeight;
-//        }
         if (setN < MIN_N || setN >= Math.max(boardHeight, boardWidth)
                 || this.boardWidth == 0 || this.boardHeight == 0) {
             nValue = 0;
         } else {
             nValue = setN;
         }
+        this.id = gameCount;
+        gameCount++;
     }
     /**
      * Create a new connectN board with dimensions and N value copied from another board.
@@ -106,13 +114,15 @@ public class ConnectN {
         this.boardHeight = otherBoard.boardHeight;
         this.boardWidth = otherBoard.boardWidth;
         this.nValue = otherBoard.nValue;
+        this.id = gameCount;
+        gameCount++;
     }
     /**
      *
      * @return the total number of games that have been created.
      */
     public static int getTotalGames() {
-      return 0;
+      return gameCount;
     }
 
     /**
@@ -188,7 +198,7 @@ public class ConnectN {
      * @return the current board's id
      */
     public int getID() {
-        return 0;
+        return this.id;
     }
     /**
      *
@@ -272,20 +282,4 @@ public class ConnectN {
     public static boolean compareBoards(final ConnectN... boards) {
         return true;
     }
-    /**
-     *
-     * @return an integer
-     */
-    public final int hashCode() {
-        return 0;
-    }
-    /**
-     *
-     * @param obj what am I doing
-     * @return true or false
-     */
-    public boolean equals(final Object obj) {
-        return true;
-    }
-
 }

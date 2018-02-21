@@ -48,6 +48,10 @@ public class ConnectN {
      * The id of the game.
      */
     private int id = 0;
+    /**
+     * The board on which to play.
+     */
+    public Player[][] board;
 
     /**
      * Create a new ConnectN board with uninitialized height, width, and N value.
@@ -64,6 +68,7 @@ public class ConnectN {
     ConnectN(final int setWidth, final int setHeight) {
         if (setWidth <= MAX_WIDTH && setWidth >= MIN_WIDTH) {
             this.boardWidth = setWidth;
+
         } else {
             this.boardWidth = 0;
         }
@@ -72,6 +77,7 @@ public class ConnectN {
         } else {
             this.boardHeight = 0;
         }
+        board = new Player[this.boardWidth][this.boardHeight];
         this.id = gameCount;
         gameCount++;
     }
@@ -103,8 +109,7 @@ public class ConnectN {
         } else {
             nValue = setN;
         }
-        this.id = gameCount;
-        gameCount++;
+        board = new Player[this.boardWidth][this.boardHeight];
     }
     /**
      * Create a new connectN board with dimensions and N value copied from another board.
@@ -114,6 +119,7 @@ public class ConnectN {
         this.boardHeight = otherBoard.boardHeight;
         this.boardWidth = otherBoard.boardWidth;
         this.nValue = otherBoard.nValue;
+        board = new Player[this.boardWidth][this.boardHeight];
         this.id = gameCount;
         gameCount++;
     }
@@ -251,7 +257,14 @@ public class ConnectN {
      * @return the new ConnectN instance, or null if the parameters are invalid
      */
     public static ConnectN create(final int width, final int height, final int n) {
-        return null;
+        ConnectN dad;
+        if (width > MAX_WIDTH || width < MIN_WIDTH && height > MAX_HEIGHT
+                || height< MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
+            return null;
+        } else {
+            dad = new ConnectN(width, height, n);
+        }
+        return dad;
     }
     /**
      *
@@ -263,7 +276,17 @@ public class ConnectN {
      */
     public static ConnectN[] createMany(final int number, final int width,
                                         final int height, final int n) {
-        return null;
+        ConnectN[] arrayArmada = new ConnectN[number];
+        if (width > MAX_WIDTH || width < MIN_WIDTH && height > MAX_HEIGHT
+                || height< MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
+            return null;
+        } else {
+            for (int i = 0; i < number; i++) {
+                ConnectN mom = new ConnectN(width, height, n);
+                arrayArmada[i] = mom;
+            }
+        }
+        return arrayArmada;
     }
     /**
      *

@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * <p>A class that implements a Connect4-like game.
  * </p>
@@ -27,7 +30,7 @@ public class ConnectN {
     /**
      * Public game title. Could be used by toString().
      */
-    public String title = "title";
+    public String title;
     /**
      * Height of the board.
      */
@@ -51,7 +54,11 @@ public class ConnectN {
     /**
      * The board on which to play.
      */
-    public Player[][] board;
+    private Player[][] board;
+    /**
+     * Has it started?
+     */
+    private boolean isStart;
 
     /**
      * Create a new ConnectN board with uninitialized height, width, and N value.
@@ -59,6 +66,7 @@ public class ConnectN {
     ConnectN() {
         this.id = gameCount;
         gameCount++;
+        isStart = false;
     }
     /**
      * Create a new ConnectN board with given height and width and uninitialized N value.
@@ -80,6 +88,7 @@ public class ConnectN {
         board = new Player[this.boardWidth][this.boardHeight];
         this.id = gameCount;
         gameCount++;
+        isStart = false;
     }
     /**
      * Creates a new connectN board with a given height, width, and N value.
@@ -110,6 +119,7 @@ public class ConnectN {
             nValue = setN;
         }
         board = new Player[this.boardWidth][this.boardHeight];
+        isStart = false;
     }
     /**
      * Create a new connectN board with dimensions and N value copied from another board.
@@ -122,6 +132,22 @@ public class ConnectN {
         board = new Player[this.boardWidth][this.boardHeight];
         this.id = gameCount;
         gameCount++;
+        isStart = false;
+    }
+    /**
+     * Sets the title.
+     * @param name the title to be set
+     */
+    public void setTitle(final String name) {
+        this.title = name;
+    }
+
+    /**
+     * Returns the title.
+     * @return the title
+     */
+    public String getTitle() {
+        return this.title;
     }
     /**
      *
@@ -146,6 +172,7 @@ public class ConnectN {
     public boolean setWidth(final int setWidth) {
         if (setWidth <= MAX_WIDTH && setWidth >= MIN_WIDTH) {
             this.boardWidth = setWidth;
+            board = new Player[this.boardWidth][this.boardHeight];
             if (nValue < MIN_N || nValue >= Math.max(boardHeight, boardWidth)) {
                 nValue = 0;
             }
@@ -170,6 +197,7 @@ public class ConnectN {
     public boolean setHeight(final int setHeight) {
         if (setHeight <= MAX_HEIGHT && setHeight >= MIN_HEIGHT) {
             this.boardHeight = setHeight;
+            board = new Player[this.boardWidth][this.boardHeight];
             if (nValue < MIN_N || nValue >= Math.max(boardHeight, boardWidth)) {
                 nValue = 0;
             }
@@ -214,7 +242,12 @@ public class ConnectN {
      * @return true if the move succeeds, false on error
      */
     public boolean setBoardAt(final Player player, final int setX, final int setY) {
-        return true;
+        if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null) {
+            board[setX][setY] = player;
+            return true;
+        } else {
+            return false;
+        }
     }
     /**
      *
@@ -223,7 +256,16 @@ public class ConnectN {
      * @return true if the move succeeds, false on error
      */
     public boolean setBoardAt(final Player player, final int setX) {
-        return true;
+        if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null) {
+            for (int i = 0; i < this.boardWidth; i++) {
+                if (board[i][0] != null) {
+                    board[i][0] = player;
+                    isStart = true;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     /**
      *
@@ -233,14 +275,24 @@ public class ConnectN {
      * or null or error if nobody has played at that position
      */
     public Player getBoardAt(final int getX, final int getY) {
-        return null;
+        if (getX > MAX_WIDTH || getX < MIN_WIDTH || getY > MAX_HEIGHT
+                || getY < MIN_HEIGHT || !isStart || board[getX][getY] == null) {
+            return null;
+        } else {
+            return board[getX][getY];
+        }
     }
     /**
      *
      * @return a copy of the current board
      */
     public Player[][] getBoard() {
-        return null;
+        if (boardWidth == 0 || boardHeight == 0) {
+            return null;
+        } else {
+            Player[][] copy = this.board;
+            return copy;
+        }
     }
     /**
      * Return the winner of the game, or null if the game has not ended.
@@ -258,8 +310,8 @@ public class ConnectN {
      */
     public static ConnectN create(final int width, final int height, final int n) {
         ConnectN dad;
-        if (width > MAX_WIDTH || width < MIN_WIDTH && height > MAX_HEIGHT
-                || height < MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
+        if ((width > MAX_WIDTH || width < MIN_WIDTH) && (height > MAX_HEIGHT
+                || height < MIN_HEIGHT) && (n < MIN_N || n > Math.max(height, width))) {
             return null;
         } else {
             dad = new ConnectN(width, height, n);
@@ -304,5 +356,36 @@ public class ConnectN {
      */
     public static boolean compareBoards(final ConnectN... boards) {
         return true;
+    }
+
+    /**
+     *
+     * @param o object
+     * @return a boolean
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ConnectN)) {
+            return false;
+        }
+        ConnectN connectN = (ConnectN) o;
+        return !(boardHeight == connectN.boardHeight
+                && boardWidth == connectN.boardWidth
+                && nValue == connectN.nValue
+                && id == connectN.id
+                && Objects.equals(title, connectN.title)
+                && Arrays.equals(getBoard(), connectN.getBoard()));
+    }
+
+    /**
+     *
+     * @return an int
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getHeight(), id, getN(), getWidth(), getTitle());
     }
 }

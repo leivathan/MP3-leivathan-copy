@@ -59,6 +59,10 @@ public class ConnectN {
      * Has it started?
      */
     private boolean isStart;
+    /**
+     * Has it ended?
+     */
+    private boolean isOver;
 
     /**
      * Create a new ConnectN board with uninitialized height, width, and N value.
@@ -201,6 +205,7 @@ public class ConnectN {
             if (nValue < MIN_N || nValue >= Math.max(boardHeight, boardWidth)) {
                 nValue = 0;
             }
+            board = new Player[this.boardWidth][this.boardHeight];
             return true;
         } else {
             return false;
@@ -242,12 +247,31 @@ public class ConnectN {
      * @return true if the move succeeds, false on error
      */
     public boolean setBoardAt(final Player player, final int setX, final int setY) {
-        if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null) {
-            board[setX][setY] = player;
-            return true;
-        } else {
+//        if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null) {
+//            board[setX][setY] = player;
+//            return true;
+//        } else {
+//            return false;
+//        }
+        if (this.board[setX][setY] != null || isOver || setX > this.boardWidth || setX < 0
+                || setY > this.boardHeight || setY < 0 || player == null) {
             return false;
         }
+        for (int i = 0; i <= setY; i++) {
+            if (this.board[setX][setY - i] != null) {
+                isStart = true;
+                this.board[setX][setY - i + 1] = player;
+                return true;
+            }
+            if (setY - i == 0 || setY == 0) {
+                if (this.board[setX][0] == null) {
+                    isStart = true;
+                    this.board[setX][0] = player;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     /**
      *
@@ -257,9 +281,9 @@ public class ConnectN {
      */
     public boolean setBoardAt(final Player player, final int setX) {
         if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null) {
-            for (int i = 0; i < this.boardWidth; i++) {
-                if (board[i][0] != null) {
-                    board[i][0] = player;
+            for (int i = 0; i < this.boardHeight; i++) {
+                if (board[setX][i] == null) {
+                    board[setX][i] = player;
                     isStart = true;
                     return true;
                 }
@@ -275,8 +299,8 @@ public class ConnectN {
      * or null or error if nobody has played at that position
      */
     public Player getBoardAt(final int getX, final int getY) {
-        if (getX > MAX_WIDTH || getX < MIN_WIDTH || getY > MAX_HEIGHT
-                || getY < MIN_HEIGHT || !isStart || board[getX][getY] == null) {
+        if (getX > this.boardWidth || getX < 0 || getY > this.boardHeight
+                || getY < 0 || !isStart || board[getX][getY] == null) {
             return null;
         } else {
             return board[getX][getY];
@@ -287,10 +311,10 @@ public class ConnectN {
      * @return a copy of the current board
      */
     public Player[][] getBoard() {
+        Player[][] copy = this.board;
         if (boardWidth == 0 || boardHeight == 0) {
             return null;
         } else {
-            Player[][] copy = this.board;
             return copy;
         }
     }
@@ -310,8 +334,8 @@ public class ConnectN {
      */
     public static ConnectN create(final int width, final int height, final int n) {
         ConnectN dad;
-        if ((width > MAX_WIDTH || width < MIN_WIDTH) && (height > MAX_HEIGHT
-                || height < MIN_HEIGHT) && (n < MIN_N || n > Math.max(height, width))) {
+        if (width > MAX_WIDTH || width < MIN_WIDTH || height > MAX_HEIGHT
+                || height < MIN_HEIGHT || n < MIN_N || n >= Math.max(height, width)) {
             return null;
         } else {
             dad = new ConnectN(width, height, n);
@@ -330,7 +354,7 @@ public class ConnectN {
                                         final int height, final int n) {
         ConnectN[] arrayArmada = new ConnectN[number];
         if (width > MAX_WIDTH || width < MIN_WIDTH && height > MAX_HEIGHT
-                || height < MIN_HEIGHT && n < MIN_N || n > Math.max(height, width)) {
+                || height < MIN_HEIGHT && n < MIN_N || n >= Math.max(height, width)) {
             return null;
         } else {
             for (int i = 0; i < number; i++) {
@@ -347,7 +371,26 @@ public class ConnectN {
      * @return true if the boards are the same, false otherwise
      */
     public static boolean compareBoards(final ConnectN firstBoard, final ConnectN secondBoard) {
-        return true;
+        boolean isSame = false;
+        if (firstBoard == null || secondBoard == null) {
+            return false;
+        }
+        if (firstBoard.boardHeight == secondBoard.boardHeight
+                && firstBoard.boardWidth == secondBoard.boardWidth) {
+            for (int i = 0; i < firstBoard.boardWidth; i++) {
+                for (int j = 0; j < firstBoard.boardHeight; j++) {
+                    if (firstBoard.board[i][j] == secondBoard.board[i][j]) {
+                        isSame = true;
+                    } else {
+                        isSame = false;
+                        break;
+                    }
+                }
+            }
+        } else {
+            isSame = false;
+        }
+        return isSame;
     }
     /**
      *
@@ -355,7 +398,16 @@ public class ConnectN {
      * @return true if all passed boards are the same, false otherwise
      */
     public static boolean compareBoards(final ConnectN... boards) {
-        return true;
+        boolean isSame = false;
+        for (int i = 0; i < boards.length - 1; i++) {
+            if (ConnectN.compareBoards(boards[i], boards[i + 1])) {
+                isSame = true;
+            } else {
+                isSame = false;
+                break;
+            }
+        }
+        return isSame;
     }
 
     /**

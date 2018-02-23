@@ -174,11 +174,13 @@ public class ConnectN {
      * @return true if the width was set successfully, false on error.
      */
     public boolean setWidth(final int setWidth) {
-        if (setWidth <= MAX_WIDTH && setWidth >= MIN_WIDTH) {
+        if (setWidth <= MAX_WIDTH && setWidth >= MIN_WIDTH && !isStart) {
             this.boardWidth = setWidth;
-            board = new Player[this.boardWidth][this.boardHeight];
             if (nValue < MIN_N || nValue >= Math.max(boardHeight, boardWidth)) {
                 nValue = 0;
+            }
+            if (boardHeight >= MIN_HEIGHT && boardHeight <= MAX_HEIGHT) {
+                board = new Player[boardWidth][boardHeight];
             }
             return true;
         } else {
@@ -199,13 +201,14 @@ public class ConnectN {
      * @return true if the height was set successfully, false on error
      */
     public boolean setHeight(final int setHeight) {
-        if (setHeight <= MAX_HEIGHT && setHeight >= MIN_HEIGHT) {
+        if (setHeight <= MAX_HEIGHT && setHeight >= MIN_HEIGHT && !isStart) {
             this.boardHeight = setHeight;
-            board = new Player[this.boardWidth][this.boardHeight];
             if (nValue < MIN_N || nValue >= Math.max(boardHeight, boardWidth)) {
                 nValue = 0;
             }
-            board = new Player[this.boardWidth][this.boardHeight];
+            if (boardWidth >= MIN_WIDTH && boardWidth <= MAX_WIDTH) {
+                board = new Player[boardWidth][boardHeight];
+            }
             return true;
         } else {
             return false;
@@ -225,7 +228,7 @@ public class ConnectN {
      */
     public boolean setN(final int newN) {
         if (newN >= MIN_N && newN < Math.max(boardHeight, boardWidth)
-                && boardHeight != 0 && boardWidth != 0) {
+                && boardHeight != 0 && boardWidth != 0 && !isStart) {
             nValue = newN;
             return true;
         } else {
@@ -247,31 +250,26 @@ public class ConnectN {
      * @return true if the move succeeds, false on error
      */
     public boolean setBoardAt(final Player player, final int setX, final int setY) {
-//        if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null) {
-//            board[setX][setY] = player;
-//            return true;
-//        } else {
-//            return false;
-//        }
-        if (this.board[setX][setY] != null || isOver || setX > this.boardWidth || setX < 0
-                || setY > this.boardHeight || setY < 0 || player == null) {
+        if (setY >= this.boardHeight || setY < 0 || setX >= this.boardWidth || setX < 0
+                || this.board[setX][setY] != null || isOver || player == null) {
             return false;
         }
-        for (int i = 0; i <= setY; i++) {
-            if (this.board[setX][setY - i] != null) {
+        if (setY == 0) {
+            if (this.board[setX][0] == null) {
                 isStart = true;
-                this.board[setX][setY - i + 1] = player;
+                this.board[setX][0] = player;
                 return true;
             }
-            if (setY - i == 0 || setY == 0) {
-                if (this.board[setX][0] == null) {
-                    isStart = true;
-                    this.board[setX][0] = player;
-                    return true;
-                }
-            }
         }
-        return false;
+        if (this.board[setX][setY - 1] == null) {
+            return false;
+        }
+        isStart = true;
+        this.board[setX][setY] = player;
+        if (this.getWinner() != null) {
+            isOver = true;
+        }
+        return true;
     }
     /**
      *
@@ -280,7 +278,8 @@ public class ConnectN {
      * @return true if the move succeeds, false on error
      */
     public boolean setBoardAt(final Player player, final int setX) {
-        if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null) {
+        if (this.boardHeight != 0 && this.boardWidth != 0 && this.getWinner() == null
+                && setX <= boardWidth && setX >= 0) {
             for (int i = 0; i < this.boardHeight; i++) {
                 if (board[setX][i] == null) {
                     board[setX][i] = player;
@@ -299,8 +298,9 @@ public class ConnectN {
      * or null or error if nobody has played at that position
      */
     public Player getBoardAt(final int getX, final int getY) {
-        if (getX > this.boardWidth || getX < 0 || getY > this.boardHeight
-                || getY < 0 || !isStart || board[getX][getY] == null) {
+        if (getX >= this.boardWidth || getX < 0 || getY >= this.boardHeight
+                || getY < 0 || !isStart || board[getX][getY] == null
+                || boardWidth == 0 || boardHeight == 0) {
             return null;
         } else {
             return board[getX][getY];
@@ -311,10 +311,28 @@ public class ConnectN {
      * @return a copy of the current board
      */
     public Player[][] getBoard() {
-        Player[][] copy = this.board;
-        if (boardWidth == 0 || boardHeight == 0) {
+        if (this.board == null) {
+            return null;
+        }
+        Player[][] copy = new Player[boardWidth][boardHeight];
+        if (this.boardWidth == 0 || this.boardHeight == 0
+                || this.boardHeight < MIN_HEIGHT || this.boardWidth < MIN_WIDTH) {
             return null;
         } else {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                    if (board[i][j] == null) {
+                        copy[i][j] = null;
+                    } else {
+                        copy[i][j] = new Player(board[i][j]);
+                    }
+                }
+            }
+//            for (int i = 0; i < this.boardWidth; i++) {
+//                for (int j = 0; j < this.boardHeight; j++) {
+//                    copy[i][j] = this.board[i][j];
+//                }
+//            }
             return copy;
         }
     }
@@ -323,6 +341,20 @@ public class ConnectN {
      * @return the winner of the game, or null if the game has not ended
      */
     public Player getWinner() {
+        int countHorizontal = 0;
+        int countVertical = 0;
+        for (int i = 0; i < this.boardWidth; i++) {
+            for (int j = 0; j < this.boardHeight - 1; j++) {
+                if (this.board[i][j] == this.board[i][j + 1]) {
+                    countVertical++;
+                } else {
+                    countVertical = 0;
+                }
+                if (countVertical == nValue) {
+                    return this.board[i][j];
+                }
+            }
+        }
         return null;
     }
     /**
@@ -372,23 +404,29 @@ public class ConnectN {
      */
     public static boolean compareBoards(final ConnectN firstBoard, final ConnectN secondBoard) {
         boolean isSame = false;
-        if (firstBoard == null || secondBoard == null) {
+        if (firstBoard == null || secondBoard == null
+                || firstBoard.getN() != secondBoard.getN()
+                || firstBoard.getHeight() != secondBoard.getHeight()
+                || firstBoard.getWidth() != secondBoard.getWidth()) {
             return false;
         }
+        if (firstBoard.getBoard() == null && secondBoard.getBoard() == null) {
+            return true;
+        }
         if (firstBoard.boardHeight == secondBoard.boardHeight
-                && firstBoard.boardWidth == secondBoard.boardWidth) {
+                && firstBoard.boardWidth == secondBoard.boardWidth
+                && firstBoard.nValue == secondBoard.nValue) {
             for (int i = 0; i < firstBoard.boardWidth; i++) {
                 for (int j = 0; j < firstBoard.boardHeight; j++) {
                     if (firstBoard.board[i][j] == secondBoard.board[i][j]) {
                         isSame = true;
                     } else {
-                        isSame = false;
-                        break;
+                        return false;
                     }
                 }
             }
         } else {
-            isSame = false;
+            return false;
         }
         return isSame;
     }
@@ -398,46 +436,57 @@ public class ConnectN {
      * @return true if all passed boards are the same, false otherwise
      */
     public static boolean compareBoards(final ConnectN... boards) {
-        boolean isSame = false;
-        for (int i = 0; i < boards.length - 1; i++) {
-            if (ConnectN.compareBoards(boards[i], boards[i + 1])) {
-                isSame = true;
-            } else {
-                isSame = false;
-                break;
+//        boolean isSame = false;
+//        if (boards.length == 0) {
+//            return true;
+//        }
+//        for (int i = 0; i < boards.length - 1; i++) {
+//            if (ConnectN.compareBoards(boards[i], boards[i + 1])) {
+//                isSame = true;
+//            } else {
+//                return false;
+//            }
+//        }
+//        return isSame;
+        for (int i = 1; i < boards.length; i++) {
+            if (boards[i] == null || boards[i - 1] == null
+                    || boards[i].getHeight() != boards[i - 1].getHeight()
+                    || boards[i].getWidth() != boards[i - 1].getWidth()
+                    || boards[i].getN() != boards[i - 1].getN()) {
+                return false;
             }
         }
-        return isSame;
+        return true;
     }
 
-    /**
-     *
-     * @param o object
-     * @return a boolean
-     */
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ConnectN)) {
-            return false;
-        }
-        ConnectN connectN = (ConnectN) o;
-        return !(boardHeight == connectN.boardHeight
-                && boardWidth == connectN.boardWidth
-                && nValue == connectN.nValue
-                && id == connectN.id
-                && Objects.equals(title, connectN.title)
-                && Arrays.equals(getBoard(), connectN.getBoard()));
-    }
-
-    /**
-     *
-     * @return an int
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(getHeight(), id, getN(), getWidth(), getTitle());
-    }
+//    /**
+//     *
+//     * @param o object
+//     * @return a boolean
+//     */
+//    @Override
+//    public boolean equals(final Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (!(o instanceof ConnectN)) {
+//            return false;
+//        }
+//        ConnectN connectN = (ConnectN) o;
+//        return !(boardHeight == connectN.boardHeight
+//                && boardWidth == connectN.boardWidth
+//                && nValue == connectN.nValue
+//                && id == connectN.id
+//                && Objects.equals(title, connectN.title)
+//                && Arrays.equals(getBoard(), connectN.getBoard()));
+//    }
+//
+//    /**
+//     *
+//     * @return an int
+//     */
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(getHeight(), id, getN(), getWidth(), getTitle());
+//    }
 }

@@ -63,6 +63,10 @@ public class ConnectN {
      * Has it ended?
      */
     private boolean isOver;
+    /**
+     * The winner.
+     */
+    private Player winner;
 
     /**
      * Create a new ConnectN board with uninitialized height, width, and N value.
@@ -244,20 +248,54 @@ public class ConnectN {
     }
     /**
      *
-     * @param player the player attmepting the move
+     * @param player the player attempting the move
      * @param setX the X coordinate that they are trying to place a tile at
      * @param setY the Y coordinate that they are trying to place a tile at
      * @return true if the move succeeds, false on error
      */
     public boolean setBoardAt(final Player player, final int setX, final int setY) {
+        int countHorizontal = 1;
+        int countVertical = 1;
         if (setY >= this.boardHeight || setY < 0 || setX >= this.boardWidth || setX < 0
-                || this.board[setX][setY] != null || isOver || player == null) {
+                || this.board[setX][setY] != null || player == null) {
             return false;
         }
         if (setY == 0) {
             if (this.board[setX][0] == null) {
                 isStart = true;
                 this.board[setX][0] = player;
+                for (int k = 0; k < this.boardHeight - 1; k++) {
+                    if (this.board[setX][k] == null) {
+                        countVertical = 1;
+                        continue;
+                    }
+                    if (this.board[setX][k] == this.board[setX][k + 1]) {
+                        countVertical++;
+                    } else {
+                        countVertical = 1;
+                    }
+                    if (countVertical == nValue) {
+                        winner = player;
+                        winner.addScore();
+                        isOver = true;
+                    }
+                }
+                for (int k = 0; k < this.boardWidth - 1; k++) {
+                    if (this.board[k][setY] == null) {
+                        countHorizontal = 1;
+                        continue;
+                    }
+                    if (this.board[k][setY] == this.board[k + 1][setY]) {
+                        countHorizontal++;
+                    } else {
+                        countHorizontal = 1;
+                    }
+                    if (countHorizontal == nValue) {
+                        winner = player;
+                        winner.addScore();
+                        isOver = true;
+                    }
+                }
                 return true;
             }
         }
@@ -266,8 +304,37 @@ public class ConnectN {
         }
         isStart = true;
         this.board[setX][setY] = player;
-        if (this.getWinner() != null) {
-            isOver = true;
+        for (int k = 0; k < this.boardHeight - 1; k++) {
+            if (this.board[setX][k] == null) {
+                countVertical = 1;
+                continue;
+            }
+            if (this.board[setX][k] == this.board[setX][k + 1]) {
+                countVertical++;
+            } else {
+                countVertical = 1;
+            }
+            if (countVertical == nValue) {
+                winner = player;
+                winner.addScore();
+                isOver = true;
+            }
+        }
+        for (int k = 0; k < this.boardWidth - 1; k++) {
+            if (this.board[k][setY] == null) {
+                countHorizontal = 1;
+                continue;
+            }
+            if (this.board[k][setY] == this.board[k + 1][setY]) {
+                countHorizontal++;
+            } else {
+                countHorizontal = 1;
+            }
+            if (countHorizontal == nValue) {
+                winner = player;
+                winner.addScore();
+                isOver = true;
+            }
         }
         return true;
     }
@@ -284,6 +351,41 @@ public class ConnectN {
                 if (board[setX][i] == null) {
                     board[setX][i] = player;
                     isStart = true;
+                    int finalY = i;
+                    int countHorizontal = 1;
+                    int countVertical = 1;
+                    for (int k = 0; k < this.boardHeight - 1; k++) {
+                        if (this.board[setX][k] == null) {
+                            countVertical = 1;
+                            continue;
+                        }
+                        if (this.board[setX][k] == this.board[setX][k + 1]) {
+                            countVertical++;
+                        } else {
+                            countVertical = 1;
+                        }
+                        if (countVertical == nValue) {
+                            winner = player;
+                            winner.addScore();
+                            isOver = true;
+                        }
+                    }
+                    for (int k = 0; k < this.boardWidth - 1; k++) {
+                        if (this.board[k][finalY] == null) {
+                            countHorizontal = 1;
+                            continue;
+                        }
+                        if (this.board[k][finalY] == this.board[k + 1][finalY]) {
+                            countHorizontal++;
+                        } else {
+                            countHorizontal = 1;
+                        }
+                        if (countHorizontal == nValue) {
+                            winner = player;
+                            winner.addScore();
+                            isOver = true;
+                        }
+                    }
                     return true;
                 }
             }
@@ -341,21 +443,34 @@ public class ConnectN {
      * @return the winner of the game, or null if the game has not ended
      */
     public Player getWinner() {
-        int countHorizontal = 0;
-        int countVertical = 0;
-        for (int i = 0; i < this.boardWidth; i++) {
-            for (int j = 0; j < this.boardHeight - 1; j++) {
-                if (this.board[i][j] == this.board[i][j + 1]) {
-                    countVertical++;
-                } else {
-                    countVertical = 0;
-                }
-                if (countVertical == nValue) {
-                    return this.board[i][j];
-                }
-            }
-        }
-        return null;
+//        int countHorizontal = 1;
+//        int countVertical = 1;
+//        for (int i = 0; i < this.boardWidth; i++) {
+//            for (int j = 0; j < this.boardHeight - 1; j++) {
+//                if (this.board[i][j] == this.board[i][j + 1]) {
+//                    countVertical++;
+//                } else {
+//                    countVertical = 1;
+//                }
+//                if (countVertical == nValue) {
+//                    return this.board[i][j];
+//                }
+//            }
+//        }
+//        for (int j = 0; j < this.boardHeight; j++) {
+//            for (int i = 0; i < this.boardWidth - 1; i++) {
+//                if (this.board[i][j] == this.board[i + 1][j]) {
+//                    countHorizontal++;
+//                } else {
+//                    countHorizontal = 1;
+//                }
+//                if (countHorizontal == nValue) {
+//                    return this.board[i][j];
+//                }
+//            }
+//        }
+//        return null;
+        return winner;
     }
     /**
      *
